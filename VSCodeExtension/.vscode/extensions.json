@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "richie5um2.vscode-sort-json",
+        "dbaeumer.vscode-eslint",
+        "mike-co.import-sorter",
+        "esbenp.prettier-vscode"
+    ]
+}
