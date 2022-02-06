@@ -1,24 +1,13 @@
 'use strict';
 
-import * as vscode from 'vscode';
+import { commands, ExtensionContext, window } from 'vscode';
+import { LaureateManager } from './laureateManager';
 
-export function activate(context: vscode.ExtensionContext): void {
-	const disposable = vscode.commands.registerCommand('extension.findLaureate', function () {
-		// Get the active text editor
-		const editor = vscode.window.activeTextEditor;
-
-		if (editor) {
-			const document = editor.document;
-			const selection = editor.selection;
-
-			// Get the word within the selection
-			const word = document.getText(selection);
-			const reversed = word.split('').reverse().join('');
-			editor.edit(editBuilder => {
-				editBuilder.replace(selection, reversed);
-			});
-		}
-	});
-
-	context.subscriptions.push(disposable);
+export function activate(context: ExtensionContext): void {
+    const manager = new LaureateManager(context);
+    context.subscriptions.push(
+        commands.registerCommand('extension.findLaureate', async () => {
+            manager.start();
+        }),
+    );
 }
