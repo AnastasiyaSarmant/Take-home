@@ -1,23 +1,14 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.activate = void 0;
-const vscode = require("vscode");
+const vscode_1 = require("vscode");
+const laureateManager_1 = require("./laureateManager");
 function activate(context) {
-    const disposable = vscode.commands.registerCommand('extension.findLaureate', function () {
-        // Get the active text editor
-        const editor = vscode.window.activeTextEditor;
-        if (editor) {
-            const document = editor.document;
-            const selection = editor.selection;
-            // Get the word within the selection
-            const word = document.getText(selection);
-            const reversed = word.split('').reverse().join('');
-            editor.edit(editBuilder => {
-                editBuilder.replace(selection, reversed);
-            });
-        }
-    });
-    context.subscriptions.push(disposable);
+    const manager = new laureateManager_1.LaureateManager();
+    context.subscriptions.push(vscode_1.commands.registerCommand('extension.findLaureate', async () => {
+        manager.start();
+    }));
+    context.subscriptions.push(manager);
 }
 exports.activate = activate;
 //# sourceMappingURL=extension.js.map

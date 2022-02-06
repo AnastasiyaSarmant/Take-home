@@ -14,3 +14,26 @@ export enum QueryValidatorResultCode {
     'InvalidField' = 3,
     'Exists' = 4,
 }
+
+export interface IConfig {
+    host: string;
+    hostPathCategoryYear: string;
+    hostPathLaureateById: string;
+    firstNobelYear: number;
+    nobelDay: number;
+    nobelMonth: number;
+    queryInputBoxTitle: string;
+    queryInputBoxPrompt: string;
+    queryInputBoxPlaceholder: string;
+    fields: string[];
+    errors: {
+        invalidFieldErrorMessage: string;
+        invalidYearErrorMessage: string;
+        invalidFormatErrorMessage: string;
+    };
+}
+
+export interface IConfigProvider {
+    config: IConfig;
+    setConfig(config: IConfig): void;
+}

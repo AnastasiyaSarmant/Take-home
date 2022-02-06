@@ -1,15 +1,16 @@
-import { Event, EventEmitter, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
+import { Event, EventEmitter, TreeDataProvider, TreeItem } from 'vscode';
 import { Connection } from './connection';
+import { DataStorage } from './dataStorage';
+import { LaureateNode } from './laureateNode';
 
 export class LaureateTreeDataProvider implements TreeDataProvider<LaureateNode> {
     private _onDidChangeTreeData: EventEmitter<any> = new EventEmitter<any>();
     readonly onDidChangeTreeData: Event<any> = this._onDidChangeTreeData.event;
-    private data: LaureateNode[];
 
-    constructor(private readonly connection?: Connection) {
-        this.data = [
-            new LaureateNode('medicine & 1988', '', [new LaureateNode('Luigi', '222'), new LaureateNode('MArio', '2')]),
-        ];
+    constructor(private storage: DataStorage<LaureateNode>, private readonly connection?: Connection) {}
+
+    public dispose(): void {
+        this._onDidChangeTreeData.dispose();
     }
 
     public getTreeItem(element: LaureateNode): TreeItem {
@@ -17,16 +18,11 @@ export class LaureateTreeDataProvider implements TreeDataProvider<LaureateNode> 
     }
 
     public getChildren(element?: LaureateNode): LaureateNode[] | undefined {
-        return element ? element.children : this.data;
+        return element ? element.children : this.storage.get();
     }
 
-    public setData(node: LaureateNode): void {
-        this.data.push(node);
+    public refresh(): void {
         this._onDidChangeTreeData.fire(undefined);
-    }
-
-    public getData(): LaureateNode[] {
-        return this.data;
     }
 
     public getParent(): LaureateNode | undefined {
@@ -37,11 +33,4 @@ export class LaureateTreeDataProvider implements TreeDataProvider<LaureateNode> 
     public provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
         return this.model.getContent(uri).then(content => content);
     } */
-}
-
-export class LaureateNode extends TreeItem {
-    constructor(public label: string, public id: string, public children?: LaureateNode[]) {
-        super(label, children === undefined ? TreeItemCollapsibleState.None : TreeItemCollapsibleState.Expanded);
-        this.children = children;
-    }
 }

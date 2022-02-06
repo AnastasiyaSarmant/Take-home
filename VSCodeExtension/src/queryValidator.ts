@@ -1,14 +1,9 @@
-import { QueryData, QueryValidatorResultCode } from './interface';
-import { config } from './config';
+import { IConfigProvider, QueryData, QueryValidatorResultCode } from './interface';
 
-export interface IQueryValidator {
-    validate(str: string): QueryValidatorResultCode;
-    getQueryData(): QueryData;
-    dispose(): void;
-}
-
-export class QueryValidator implements IQueryValidator {
+export class QueryValidator {
     private queryData: QueryData = { year: 0, field: '' };
+
+    constructor(private configProvider: IConfigProvider) {}
 
     public validate(str: string): QueryValidatorResultCode {
         const split = str
@@ -45,12 +40,12 @@ export class QueryValidator implements IQueryValidator {
     private validateYear(year: string): QueryValidatorResultCode {
         const now = new Date();
         const lastYear =
-            now.getDay() < config.nobelDay && now.getMonth() < config.nobelMonth
+            now.getDay() < this.configProvider.config.nobelDay && now.getMonth() < this.configProvider.config.nobelMonth
                 ? now.getFullYear() - 1
                 : now.getFullYear();
         const inputYear = Number.parseInt(year);
 
-        if (inputYear < config.firstNobelYear || inputYear > lastYear) {
+        if (inputYear < this.configProvider.config.firstNobelYear || inputYear > lastYear) {
             return QueryValidatorResultCode.InvalidYear;
         }
 
@@ -59,7 +54,7 @@ export class QueryValidator implements IQueryValidator {
     }
 
     private validateField(field: string): QueryValidatorResultCode {
-        if (!config.fields.some((f: string): boolean => field === f)) {
+        if (!this.configProvider.config.fields.some((f: string): boolean => field === f)) {
             return QueryValidatorResultCode.InvalidField;
         }
 
