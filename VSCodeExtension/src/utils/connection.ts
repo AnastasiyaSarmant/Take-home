@@ -1,20 +1,13 @@
 import * as axios from 'axios';
-import { IConfigProvider } from '../interfaces/public';
 
 export class Connection {
-    private retries: number;
-    constructor(private configProvide: IConfigProvider) {
-        this.retries = this.configProvide.config.fetchRetries;
-    }
-
-    public async getData(url: string): Promise<any> {
+    public static async getData(url: string, retries: number): Promise<any> {
         let result;
         try {
-            result = await axios.default.get(url, {});
+            result = await axios.default.get(url);
         } catch (error) {
-            if (this.retries) {
-                this.retries--;
-                return this.getData(url);
+            if (retries) {
+                return Connection.getData(url, retries - 1);
             }
             throw error;
         }
@@ -22,7 +15,7 @@ export class Connection {
         return result?.data[0];
     }
 
-    public async postData(url: string, data: any) {
+    public static async postData(url: string, data: any, retries: number) {
         throw 'Not Implemented';
     }
 }

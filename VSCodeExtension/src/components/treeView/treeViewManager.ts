@@ -9,7 +9,7 @@ export class TreeViewManager {
     private treeViewDataProvider: LaureateTreeDataProvider;
     private subs: Disposable[] = [];
 
-    constructor(private configProvider: IConfigProvider, private connection: Connection, private logger: ILogger) {
+    constructor(private configProvider: IConfigProvider, private logger: ILogger) {
         this.treeViewDataProvider = new LaureateTreeDataProvider();
 
         window.registerTreeDataProvider('laureates', this.treeViewDataProvider);
@@ -46,7 +46,7 @@ export class TreeViewManager {
         const url = `${this.configProvider.config.host}${this.configProvider.config.hostPathLaureateById}${selectedNode.id}`;
 
         try {
-            const data = await this.connection.getData(url);
+            const data = await Connection.getData(url, this.configProvider.config.fetchRetries);
             if (!data) {
                 this.logger.warn('treeViewManager.fetchAnddisplayData empty data');
 

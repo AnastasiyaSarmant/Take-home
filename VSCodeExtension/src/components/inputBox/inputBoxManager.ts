@@ -13,7 +13,6 @@ export class InputBoxManager {
     constructor(
         private configProvider: IConfigProvider,
         private localization: ILocalizationProvider,
-        private connection: Connection,
         private logger: ILogger,
     ) {
         this.validator = new QueryValidator(this.configProvider);
@@ -47,7 +46,7 @@ export class InputBoxManager {
     private onDidAccept = async (): Promise<boolean> => {
         const result = this.validator.validate(this.inputBox.value);
         const validationData = this.validator.getQueryData();
-
+        this.validator.reset();
         if (this.handleQueryValidationResult(result)) {
             return await this.fetchAndAddData(validationData);
         }
@@ -61,7 +60,7 @@ export class InputBoxManager {
         }${validationData.field.slice(0, 3)}/${validationData.year}`;
 
         try {
-            const data = await this.connection.getData(url);
+            const data = await Connection.getData(url, this.configProvider.config.fetchRetries);
             if (!data) {
                 this.logger.log('InputBoxManager.fetchAndAddData empty data');
                 return false;

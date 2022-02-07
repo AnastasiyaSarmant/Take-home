@@ -13,7 +13,7 @@ export interface IConfig {
     nobelDay: number;
     nobelMonth: number;
     fields: string[];
-    loggerMaxBuggerSize: number;
+    loggerMaxBufferSize: number;
 }
 
 export interface IConfigProvider {

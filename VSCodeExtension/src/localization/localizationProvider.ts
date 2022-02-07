@@ -1,5 +1,5 @@
 import { ILocales, ILocalizationProvider } from '../interfaces/public';
-
+import { defaultLocalization } from './default';
 export class LocalizationProvider implements ILocalizationProvider {
     private localesInternal!: ILocales;
 
@@ -7,23 +7,10 @@ export class LocalizationProvider implements ILocalizationProvider {
         return this.localesInternal;
     }
     constructor() {
-        this.setDefaultLocales();
+        this.localesInternal = defaultLocalization;
     }
 
     public setLocales(locales: ILocales): void {
         this.localesInternal = locales;
-    }
-
-    private setDefaultLocales(): void {
-        this.localesInternal = {
-            queryInputBoxTitle: 'Find Nobel Laureates',
-            queryInputBoxPrompt: 'Fields:',
-            queryInputBoxPlaceholder: 'Ex: medicine & 1988',
-            errors: {
-                invalidFieldErrorMessage: 'Invalid Field',
-                invalidYearErrorMessage: 'Invalid Year',
-                invalidFormatErrorMessage: 'Invalid Query Format',
-            },
-        };
     }
 }
