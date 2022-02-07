@@ -3,7 +3,7 @@ export interface ILaureateManager {
 }
 
 export type QueryData = {
-    year: number;
+    year: string;
     field: string;
 };
 
@@ -16,8 +16,9 @@ export enum QueryValidatorResultCode {
 }
 
 export interface IConfig {
+    fetchRetries: number;
     host: string;
-    hostPathCategoryYear: string;
+    hostPathNobelPrizes: string;
     hostPathLaureateById: string;
     firstNobelYear: number;
     nobelDay: number;
@@ -36,4 +37,16 @@ export interface IConfig {
 export interface IConfigProvider {
     config: IConfig;
     setConfig(config: IConfig): void;
+}
+
+export type IReturnData = { data: any };
+
+export interface ICategoryDataResult extends IReturnData {
+    awardYear: string;
+    laureates: ILaureateData[];
+}
+
+export interface ILaureateData extends IReturnData {
+    id: string;
+    fullName: { en: string };
 }

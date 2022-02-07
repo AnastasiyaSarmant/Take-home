@@ -16,14 +16,15 @@ export class ConfigProvider implements IConfigProvider {
 
     private setDefaultConfig(): void {
         this.configInternal = {
-            host: 'https://api.nobelrpize.org/2.1/',
-            hostPathCategoryYear: '{0}/{1}',
-            hostPathLaureateById: 'laureate/{0}',
+            host: 'https://api.nobelprize.org/2.1/',
+            hostPathNobelPrizes: 'nobelPrize/',
+            hostPathLaureateById: 'laureate/',
             firstNobelYear: 1901,
             nobelDay: 10,
             nobelMonth: 12,
+            fetchRetries: 3,
             queryInputBoxTitle: 'Find Nobel Laureates',
-            queryInputBoxPrompt: 'Fields: chemistry, economy, medicine, litreture, physics/n',
+            queryInputBoxPrompt: 'Fields:',
             queryInputBoxPlaceholder: 'Ex: medicine & 1988',
             fields: ['chemistry', 'economy', 'litreture', 'peace', 'physics', 'medicine'],
             errors: {

@@ -35,6 +35,10 @@
             {
                 "command": "laureates:refreshData",
                 "title": "Refresh tree view"
+            },
+            {
+                "command": "textDocument:open",
+                "title": "Replace text in a document"
             }
         ]
     },
@@ -50,5 +54,8 @@
         "@typescript-eslint/parser": "^4.16.0",
         "eslint": "^7.21.0",
         "typescript": "^4.2.2"
+    },
+    "dependencies": {
+        "axios": "^0.25.0"
     }
 }

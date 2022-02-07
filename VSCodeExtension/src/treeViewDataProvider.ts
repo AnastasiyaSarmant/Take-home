@@ -1,13 +1,14 @@
 import { Event, EventEmitter, TreeDataProvider, TreeItem } from 'vscode';
-import { Connection } from './connection';
-import { DataStorage } from './dataStorage';
 import { LaureateNode } from './laureateNode';
 
 export class LaureateTreeDataProvider implements TreeDataProvider<LaureateNode> {
     private _onDidChangeTreeData: EventEmitter<any> = new EventEmitter<any>();
     readonly onDidChangeTreeData: Event<any> = this._onDidChangeTreeData.event;
+    private storage: LaureateNode[];
 
-    constructor(private storage: DataStorage<LaureateNode>, private readonly connection?: Connection) {}
+    constructor() {
+        this.storage = [];
+    }
 
     public dispose(): void {
         this._onDidChangeTreeData.dispose();
@@ -18,11 +19,17 @@ export class LaureateTreeDataProvider implements TreeDataProvider<LaureateNode> 
     }
 
     public getChildren(element?: LaureateNode): LaureateNode[] | undefined {
-        return element ? element.children : this.storage.get();
+        return element ? element.children : this.storage;
     }
 
-    public refresh(): void {
+    public addNode(node: LaureateNode): boolean {
+        if (this.storage.some((item): boolean => item.label === node.label)) {
+            return false;
+        }
+
+        this.storage.push(node);
         this._onDidChangeTreeData.fire(undefined);
+        return true;
     }
 
     public getParent(): LaureateNode | undefined {

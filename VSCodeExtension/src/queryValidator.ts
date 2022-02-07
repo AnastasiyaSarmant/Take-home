@@ -1,7 +1,7 @@
 import { IConfigProvider, QueryData, QueryValidatorResultCode } from './interface';
 
 export class QueryValidator {
-    private queryData: QueryData = { year: 0, field: '' };
+    private queryData: QueryData = { year: '', field: '' };
 
     constructor(private configProvider: IConfigProvider) {}
 
@@ -26,6 +26,10 @@ export class QueryValidator {
             if (res) return res;
         }
 
+        if (!this.queryData.year || !this.queryData.field) {
+            return QueryValidatorResultCode.InvalidQueryFormat;
+        }
+
         return QueryValidatorResultCode.OK;
     }
 
@@ -34,7 +38,7 @@ export class QueryValidator {
     }
 
     public reset(): void {
-        this.queryData = { year: 0, field: '' };
+        this.queryData = { year: '', field: '' };
     }
 
     private validateYear(year: string): QueryValidatorResultCode {
@@ -49,7 +53,7 @@ export class QueryValidator {
             return QueryValidatorResultCode.InvalidYear;
         }
 
-        this.queryData.year = inputYear;
+        this.queryData.year = inputYear.toString();
         return QueryValidatorResultCode.OK;
     }
 
