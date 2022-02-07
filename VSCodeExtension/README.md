@@ -1,8 +1,8 @@
-# Search Nobel
+# Find Nobel Laureates
 
 This sample demonstrates how to implement and contribute a tree view in VS Code. This includes:
 
-![Package Explorer](./resources/example.png)
+![Find laureate](./resources/example.png)
 
 ## VS Code API
 
