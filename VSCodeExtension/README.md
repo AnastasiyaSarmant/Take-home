@@ -2,7 +2,7 @@
 
 This sample demonstrates how to implement and contribute a tree view in VS Code. This includes:
 
-![Find laureate](./resources/example.png)
+![Find laureate](./resources/example.gif)
 
 ## VS Code API
 
