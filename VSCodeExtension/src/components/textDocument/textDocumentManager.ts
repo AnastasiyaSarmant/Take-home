@@ -1,4 +1,4 @@
-import { commands, Disposable, workspace, window, Position, Uri } from 'vscode';
+import { commands, Disposable, workspace, window, Position } from 'vscode';
 import { ILogger } from '../../interfaces/public';
 
 export class TextDocumentManager {
