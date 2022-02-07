@@ -1,7 +1,8 @@
 import { commands, Disposable, InputBox, window } from 'vscode';
-import { Connection } from './connection';
-import { ICategoryDataResult, IConfigProvider, QueryData, QueryValidatorResultCode } from './interface';
-import { LaureateNode } from './laureateNode';
+import { Connection } from '../../utils/connection';
+import { ICategoryDataResult, QueryData, QueryValidatorResultCode } from '../../interfaces/internal';
+import { IConfigProvider, ILocalizationProvider, ILogger } from '../../interfaces/public';
+import { LaureateNode } from '../treeView/laureateNode';
 import { QueryValidator } from './queryValidator';
 
 export class InputBoxManager {
@@ -9,7 +10,12 @@ export class InputBoxManager {
     private validator: QueryValidator;
     private onDidAcceptEvent!: Disposable;
 
-    constructor(private configProvider: IConfigProvider, private connection: Connection) {
+    constructor(
+        private configProvider: IConfigProvider,
+        private localization: ILocalizationProvider,
+        private connection: Connection,
+        private logger: ILogger,
+    ) {
         this.validator = new QueryValidator(this.configProvider);
         this.initInputBox();
     }
@@ -18,7 +24,7 @@ export class InputBoxManager {
         try {
             this.inputBox.show();
         } catch (error) {
-            // log
+            this.logger.error(`InputBoxManager.show ${JSON.stringify(error)}`);
         }
     }
 
@@ -29,11 +35,11 @@ export class InputBoxManager {
 
     private initInputBox(): void {
         this.inputBox = window.createInputBox();
-        this.inputBox.title = this.configProvider.config.queryInputBoxTitle;
-        this.inputBox.prompt = `${this.configProvider.config.queryInputBoxPrompt} ${this.configProvider.config.fields
+        this.inputBox.title = this.localization.locales.queryInputBoxTitle;
+        this.inputBox.prompt = `${this.localization.locales.queryInputBoxPrompt} ${this.configProvider.config.fields
             .toString()
             .replace(new RegExp(',', 'g'), ', ')}\n`;
-        this.inputBox.placeholder = this.configProvider.config.queryInputBoxPlaceholder;
+        this.inputBox.placeholder = this.localization.locales.queryInputBoxPlaceholder;
 
         this.onDidAcceptEvent = this.inputBox.onDidAccept(this.onDidAccept);
     }
@@ -57,7 +63,7 @@ export class InputBoxManager {
         try {
             const data = await this.connection.getData(url);
             if (!data) {
-                // log
+                this.logger.log('InputBoxManager.fetchAndAddData empty data');
                 return false;
             }
             const node = LaureateNode.nodeFromCategoryData(
@@ -68,7 +74,7 @@ export class InputBoxManager {
             commands.executeCommand('laureates:refreshData', node);
             return true;
         } catch (error) {
-            window.showErrorMessage(JSON.stringify(error));
+            this.logger.log(JSON.stringify(error), true);
             return false;
         }
     }
@@ -76,15 +82,17 @@ export class InputBoxManager {
     private handleQueryValidationResult(result: QueryValidatorResultCode): boolean {
         switch (result) {
             case QueryValidatorResultCode.InvalidField:
-                window.showErrorMessage(this.configProvider.config.errors.invalidFieldErrorMessage);
+                this.logger.warn(`${this.localization.locales.errors.invalidFieldErrorMessage}`, true);
                 return false;
             case QueryValidatorResultCode.InvalidYear:
-                window.showErrorMessage(this.configProvider.config.errors.invalidYearErrorMessage);
+                this.logger.warn(`${this.localization.locales.errors.invalidYearErrorMessage}`, true);
                 return false;
             case QueryValidatorResultCode.InvalidQueryFormat:
-                window.showErrorMessage(this.configProvider.config.errors.invalidFormatErrorMessage);
+                this.logger.warn(`${this.localization.locales.errors.invalidFormatErrorMessage}`, true);
+
                 return false;
             default:
+                this.logger.log(`${this.localization.locales.errors.invalidFormatErrorMessage}`);
                 return true;
         }
     }

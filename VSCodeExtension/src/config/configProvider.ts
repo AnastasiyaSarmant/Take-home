@@ -1,4 +1,4 @@
-import { IConfig, IConfigProvider } from './interface';
+import { IConfig, IConfigProvider } from '../interfaces/public';
 
 export class ConfigProvider implements IConfigProvider {
     private configInternal!: IConfig;
@@ -23,15 +23,8 @@ export class ConfigProvider implements IConfigProvider {
             nobelDay: 10,
             nobelMonth: 12,
             fetchRetries: 3,
-            queryInputBoxTitle: 'Find Nobel Laureates',
-            queryInputBoxPrompt: 'Fields:',
-            queryInputBoxPlaceholder: 'Ex: medicine & 1988',
             fields: ['chemistry', 'economy', 'litreture', 'peace', 'physics', 'medicine'],
-            errors: {
-                invalidFieldErrorMessage: 'Invalid Field',
-                invalidYearErrorMessage: 'Invalid Year',
-                invalidFormatErrorMessage: 'Invalid Query Format',
-            },
+            loggerMaxBuggerSize: 15,
         };
     }
 }

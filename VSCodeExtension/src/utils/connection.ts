@@ -1,5 +1,5 @@
-import { IConfigProvider, IReturnData } from './interface';
 import * as axios from 'axios';
+import { IConfigProvider } from '../interfaces/public';
 
 export class Connection {
     private retries: number;
@@ -7,7 +7,7 @@ export class Connection {
         this.retries = this.configProvide.config.fetchRetries;
     }
 
-    public async getData(url: string): Promise<IReturnData> {
+    public async getData(url: string): Promise<any> {
         let result;
         try {
             result = await axios.default.get(url, {});
